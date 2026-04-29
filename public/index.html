@@ -9,121 +9,244 @@
     <style>
       body {
         font-family:
-          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", sans-serif;
       }
     </style>
   </head>
-  <body class="bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen flex items-start justify-center p-4 sm:p-6">
-    <main class="w-full max-w-xl bg-white rounded-2xl shadow-xl p-6 sm:p-10 my-6 sm:my-10">
+  <body
+    class="bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen flex items-start justify-center p-4 sm:p-6"
+  >
+    <main
+      class="w-full max-w-xl bg-white rounded-2xl shadow-xl p-6 sm:p-10 my-6 sm:my-10"
+    >
       <!-- Loading state -->
       <div id="loading" class="text-center py-12">
-        <div class="inline-block w-10 h-10 border-4 border-slate-200 border-t-slate-700 rounded-full animate-spin"></div>
+        <div
+          class="inline-block w-10 h-10 border-4 border-slate-200 border-t-slate-700 rounded-full animate-spin"
+        ></div>
         <p class="mt-4 text-slate-500 text-sm">Confirming your purchase…</p>
       </div>
 
       <!-- Success state -->
       <div id="success" class="hidden">
         <div class="text-center">
-          <div class="w-16 h-16 mx-auto rounded-full bg-emerald-100 flex items-center justify-center">
-            <svg class="w-9 h-9 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+          <div
+            class="w-16 h-16 mx-auto rounded-full bg-emerald-100 flex items-center justify-center"
+          >
+            <svg
+              class="w-9 h-9 text-emerald-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2.5"
+                d="M5 13l4 4L19 7"
+              />
             </svg>
           </div>
-          <h1 class="mt-6 text-3xl font-semibold text-slate-900">Thanks for your purchase!</h1>
+          <h1 class="mt-6 text-3xl font-semibold text-slate-900">
+            Thanks for your purchase!
+          </h1>
           <p class="mt-3 text-slate-600">
-            We've also emailed your activation link to you. <strong class="text-slate-800">If it doesn't arrive within a few minutes, check your spam folder</strong> — or just save the details from this page.
+            We've also emailed your activation link to you.
+            <strong class="text-slate-800"
+              >If it doesn't arrive within a few minutes, check your spam
+              folder</strong
+            >
+            — or just copy the link below and save it.
           </p>
         </div>
 
-        <!-- Step 1: Activation link -->
-        <section class="mt-8">
-          <h2 class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">
-            Your activation link
-          </h2>
-          <p class="text-sm text-slate-600 mb-3">
-            Copy this and keep it somewhere safe. You'll need it to activate your access.
-          </p>
-          <div class="flex items-stretch gap-2">
+        <!-- Activation link — primary, save-it-first emphasis -->
+        <section
+          class="mt-8 p-5 sm:p-6 rounded-2xl bg-amber-50 border-2 border-amber-200"
+        >
+          <div class="flex items-start gap-3">
+            <div
+              class="shrink-0 w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center"
+            >
+              <svg
+                class="w-5 h-5 text-amber-700"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
+                />
+              </svg>
+            </div>
+            <div class="flex-1">
+              <h2 class="text-lg font-semibold text-slate-900">
+                Save your activation link
+              </h2>
+              <p class="mt-1 text-sm text-slate-700">
+                If you don't have Telegram yet,
+                <strong>save the activation link below</strong>. Once you've got
+                Telegram installed, just tap the link to activate your purchase.
+              </p>
+            </div>
+          </div>
+
+          <div class="mt-4 flex items-stretch gap-2">
             <input
               id="activation-url"
               type="text"
               readonly
-              class="flex-1 min-w-0 px-3 py-3 rounded-lg border border-slate-300 bg-slate-50 font-mono text-xs sm:text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-400"
+              class="flex-1 min-w-0 px-3 py-3 rounded-lg border border-amber-300 bg-white font-mono text-xs sm:text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-amber-400"
             />
             <button
               data-copy-target="activation-url"
-              class="copy-btn shrink-0 px-4 py-3 rounded-lg border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-sm font-medium transition"
+              class="copy-btn shrink-0 px-5 py-3 rounded-lg bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold transition shadow-sm"
             >
-              Copy
+              Copy link
             </button>
           </div>
+        </section>
 
+        <!-- Open in Telegram — for buyers who already have it -->
+        <section class="mt-6">
           <a
             id="activate-btn"
             href="#"
             target="_blank"
             rel="noopener"
-            class="mt-4 inline-flex items-center justify-center gap-2 w-full px-6 py-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-medium text-lg transition shadow-md"
+            class="inline-flex items-center justify-center gap-2 w-full px-6 py-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-medium text-lg transition shadow-md"
           >
             <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z" />
+              <path
+                d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"
+              />
             </svg>
             Open in Telegram
           </a>
+          <p class="mt-2 text-center text-xs text-slate-500">
+            Already have Telegram? One tap and you're in. Otherwise, save the
+            link above first.
+          </p>
         </section>
 
         <!-- Step 2: Don't have Telegram? -->
-        <section class="mt-8 rounded-xl bg-sky-50 border border-sky-100 overflow-hidden">
+        <section
+          class="mt-8 rounded-xl bg-sky-50 border border-sky-100 overflow-hidden"
+        >
           <details class="group">
-            <summary class="cursor-pointer p-5 list-none flex items-center justify-between gap-3">
-              <span class="flex items-center gap-2 font-semibold text-slate-900">
-                <svg class="w-5 h-5 text-sky-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <summary
+              class="cursor-pointer p-5 list-none flex items-center justify-between gap-3"
+            >
+              <span
+                class="flex items-center gap-2 font-semibold text-slate-900"
+              >
+                <svg
+                  class="w-5 h-5 text-sky-600 shrink-0"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
                 </svg>
                 Don't have Telegram yet?
               </span>
-              <svg class="w-5 h-5 text-slate-400 transition-transform group-open:rotate-90 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              <svg
+                class="w-5 h-5 text-slate-400 transition-transform group-open:rotate-90 shrink-0"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
             </summary>
-            <div class="px-5 pb-5 pt-0 text-sm text-slate-700 space-y-5 border-t border-sky-100">
+            <div
+              class="px-5 pb-5 pt-0 text-sm text-slate-700 space-y-5 border-t border-sky-100"
+            >
               <p class="pt-4">
-                Telegram is a free messaging app. It takes about a minute to set up.
+                Telegram is a free messaging app. It takes about a minute to set
+                up.
               </p>
 
               <div>
-                <h3 class="font-semibold text-slate-900 mb-2">Step 1 — Install it on your phone</h3>
+                <h3 class="font-semibold text-slate-900 mb-2">
+                  Step 1 — Install it on your phone
+                </h3>
                 <ol class="list-decimal pl-5 space-y-1.5 text-slate-700">
-                  <li>Open the <strong>App Store</strong> (iPhone) or <strong>Google Play</strong> (Android).</li>
+                  <li>
+                    Open the <strong>App Store</strong> (iPhone) or
+                    <strong>Google Play</strong> (Android).
+                  </li>
                   <li>Search for <strong>“Telegram”</strong>.</li>
                   <li>Tap <strong>Install</strong> / <strong>Get</strong>.</li>
                   <li>Open the app and sign up with your phone number.</li>
-                  <li>You'll get a verification code via SMS — enter it to finish setup.</li>
+                  <li>
+                    You'll get a verification code via SMS — enter it to finish
+                    setup.
+                  </li>
                 </ol>
-                <p class="mt-3 p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 text-xs">
-                  <strong>Important:</strong> Set up Telegram on your phone first. You won't be able to log in on a computer without the mobile app.
+                <p
+                  class="mt-3 p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 text-xs"
+                >
+                  <strong>Important:</strong> Set up Telegram on your phone
+                  first. You won't be able to log in on a computer without the
+                  mobile app.
                 </p>
               </div>
 
               <div>
-                <h3 class="font-semibold text-slate-900 mb-2">Step 2 — Install it on your computer <span class="font-normal text-slate-500">(optional)</span></h3>
+                <h3 class="font-semibold text-slate-900 mb-2">
+                  Step 2 — Install it on your computer
+                  <span class="font-normal text-slate-500">(optional)</span>
+                </h3>
                 <ol class="list-decimal pl-5 space-y-1.5 text-slate-700">
                   <li>
                     On your computer, go to
-                    <a href="https://telegram.org/apps" target="_blank" rel="noopener" class="text-sky-700 hover:text-sky-900 underline">telegram.org/apps</a>.
+                    <a
+                      href="https://telegram.org/apps"
+                      target="_blank"
+                      rel="noopener"
+                      class="text-sky-700 hover:text-sky-900 underline"
+                      >telegram.org/apps</a
+                    >.
                   </li>
-                  <li>Download the version for your OS (Windows, Mac, or Linux), then install and launch it.</li>
+                  <li>
+                    Download the version for your OS (Windows, Mac, or Linux),
+                    then install and launch it.
+                  </li>
                   <li>Choose <strong>“Log in by QR code”</strong>.</li>
-                  <li>On your phone, go to <strong>Settings → Devices → Link Desktop Device</strong>.</li>
-                  <li>Point your phone's camera at the QR code on your computer screen.</li>
+                  <li>
+                    On your phone, go to
+                    <strong>Settings → Devices → Link Desktop Device</strong>.
+                  </li>
+                  <li>
+                    Point your phone's camera at the QR code on your computer
+                    screen.
+                  </li>
                 </ol>
                 <p class="mt-3 text-xs text-slate-500">
-                  <strong>Tip:</strong> Once you're logged in on your PC, you can uninstall the mobile app if you wish — but we recommend keeping it for quick access on the go.
+                  <strong>Tip:</strong> Once you're logged in on your PC, you
+                  can uninstall the mobile app if you wish — but we recommend
+                  keeping it for quick access on the go.
                 </p>
               </div>
 
               <p class="pt-2 text-sm text-slate-700">
-                Once Telegram is installed, come back to this page and tap <strong>Open in Telegram</strong> above.
+                Once Telegram is installed, come back to this page and tap
+                <strong>Open in Telegram</strong> above.
               </p>
             </div>
           </details>
@@ -131,15 +254,32 @@
 
         <!-- Step 3: Manual activation fallback -->
         <details class="mt-6 group">
-          <summary class="cursor-pointer text-sm text-slate-500 hover:text-slate-700 list-none flex items-center gap-1.5">
-            <svg class="w-4 h-4 transition-transform group-open:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          <summary
+            class="cursor-pointer text-sm text-slate-500 hover:text-slate-700 list-none flex items-center gap-1.5"
+          >
+            <svg
+              class="w-4 h-4 transition-transform group-open:rotate-90"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 5l7 7-7 7"
+              />
             </svg>
             Activate manually
           </summary>
           <div class="mt-3 p-4 rounded-lg bg-slate-50 border border-slate-200">
             <p class="text-sm text-slate-700">
-              If the button above doesn't work, open Telegram, find <code id="bot-handle" class="px-1.5 py-0.5 rounded bg-white border border-slate-200 font-mono text-xs"></code>, and send this command:
+              If the button above doesn't work, open Telegram, find
+              <code
+                id="bot-handle"
+                class="px-1.5 py-0.5 rounded bg-white border border-slate-200 font-mono text-xs"
+              ></code
+              >, and send this command:
             </p>
             <div class="mt-3 flex items-stretch gap-2">
               <input
@@ -161,14 +301,29 @@
 
       <!-- Error state -->
       <div id="error" class="hidden text-center py-8">
-        <div class="w-16 h-16 mx-auto rounded-full bg-amber-100 flex items-center justify-center">
-          <svg class="w-9 h-9 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        <div
+          class="w-16 h-16 mx-auto rounded-full bg-amber-100 flex items-center justify-center"
+        >
+          <svg
+            class="w-9 h-9 text-amber-600"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2.5"
+              d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
           </svg>
         </div>
-        <h1 class="mt-6 text-2xl font-semibold text-slate-900">Hmm, something went wrong</h1>
+        <h1 class="mt-6 text-2xl font-semibold text-slate-900">
+          Hmm, something went wrong
+        </h1>
         <p id="error-message" class="mt-3 text-slate-600 text-sm">
-          We couldn't load your activation link. Please contact support and share the URL of this page.
+          We couldn't load your activation link. Please contact support and
+          share the URL of this page.
         </p>
       </div>
     </main>
@@ -176,52 +331,59 @@
     <script>
       (async () => {
         const params = new URLSearchParams(window.location.search);
-        const sessionId = params.get('checkoutsesh');
+        const sessionId = params.get("checkoutsesh");
 
-        const $loading = document.getElementById('loading');
-        const $success = document.getElementById('success');
-        const $error = document.getElementById('error');
-        const $errorMsg = document.getElementById('error-message');
-        const $btn = document.getElementById('activate-btn');
-        const $url = document.getElementById('activation-url');
-        const $cmd = document.getElementById('manual-command');
-        const $bot = document.getElementById('bot-handle');
+        const $loading = document.getElementById("loading");
+        const $success = document.getElementById("success");
+        const $error = document.getElementById("error");
+        const $errorMsg = document.getElementById("error-message");
+        const $btn = document.getElementById("activate-btn");
+        const $url = document.getElementById("activation-url");
+        const $cmd = document.getElementById("manual-command");
+        const $bot = document.getElementById("bot-handle");
 
         const showError = (msg) => {
-          $loading.classList.add('hidden');
-          $success.classList.add('hidden');
-          $error.classList.remove('hidden');
+          $loading.classList.add("hidden");
+          $success.classList.add("hidden");
+          $error.classList.remove("hidden");
           if (msg) $errorMsg.textContent = msg;
         };
 
         if (!sessionId) {
           showError(
-            'No checkout session ID was provided in the URL. Please open this page through your purchase confirmation.',
+            "No checkout session ID was provided in the URL. Please open this page through your purchase confirmation.",
           );
           return;
         }
 
         try {
-          const res = await fetch(`/api/activation?checkoutsesh=${encodeURIComponent(sessionId)}`);
+          const res = await fetch(
+            `/api/activation?checkoutsesh=${encodeURIComponent(sessionId)}`,
+          );
           if (!res.ok) {
             const body = await res.json().catch(() => ({}));
-            showError(body.statusMessage || `We couldn't load your activation link (status ${res.status}).`);
+            showError(
+              body.statusMessage ||
+                `We couldn't load your activation link (status ${res.status}).`,
+            );
             return;
           }
           const data = await res.json();
           $btn.href = data.activationUrl;
           $url.value = data.activationUrl;
           $cmd.value = `/start ${data.activationCode}`;
-          $bot.textContent = '@' + data.botUsername;
-          $loading.classList.add('hidden');
-          $success.classList.remove('hidden');
+          $bot.textContent = "@" + data.botUsername;
+          $loading.classList.add("hidden");
+          $success.classList.remove("hidden");
         } catch (err) {
-          showError("We couldn't reach the server. Check your connection and try again.");
+          showError(
+            "We couldn't reach the server. Check your connection and try again.",
+          );
         }
 
         // Copy buttons
-        document.querySelectorAll('.copy-btn').forEach((btn) => {
-          btn.addEventListener('click', async () => {
+        document.querySelectorAll(".copy-btn").forEach((btn) => {
+          btn.addEventListener("click", async () => {
             const target = document.getElementById(btn.dataset.copyTarget);
             if (!target) return;
             try {
@@ -229,14 +391,22 @@
             } catch {
               // Fallback for non-clipboard-API browsers
               target.select();
-              document.execCommand('copy');
+              document.execCommand("copy");
             }
             const original = btn.textContent;
-            btn.textContent = 'Copied!';
-            btn.classList.add('bg-emerald-50', 'border-emerald-300', 'text-emerald-700');
+            btn.textContent = "Copied!";
+            btn.classList.add(
+              "bg-emerald-50",
+              "border-emerald-300",
+              "text-emerald-700",
+            );
             setTimeout(() => {
               btn.textContent = original;
-              btn.classList.remove('bg-emerald-50', 'border-emerald-300', 'text-emerald-700');
+              btn.classList.remove(
+                "bg-emerald-50",
+                "border-emerald-300",
+                "text-emerald-700",
+              );
             }, 1500);
           });
         });
