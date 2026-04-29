@@ -15,17 +15,7 @@ Built with [Nitro](https://nitro.build) so you can deploy it to Vercel, Cloudfla
 3. The page calls `GET /api/activation?checkoutsesh=cs_…`, which uses the Stripe Secret Key to retrieve the session and derive the BuddyPro activation code.
 4. The buyer clicks the **Open in Telegram** button and is dropped into your bot with the activation code prefilled.
 
-## Activation code rule
-
-The activation code matches BuddyPro's webhook router exactly:
-
-| Session type                                                                  | Activation code     |
-| ----------------------------------------------------------------------------- | ------------------- |
-| Subscription (`mode: subscription`)                                           | `STRIPE_in_…`       |
-| One-off (`mode: payment`) **with** `invoice_creation.enabled: true`           | `STRIPE_in_…`       |
-| One-off (`mode: payment`) **without** invoice creation                        | `STRIPE_pi_…`       |
-
-In all cases the final link is `https://t.me/{BOT_USERNAME}?start=STRIPE_{id}`.
+The activation link is `https://t.me/{BOT_USERNAME}?start=STRIPE_{invoice_or_payment_intent_id}`.
 
 ## Setup
 
