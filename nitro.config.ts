@@ -4,6 +4,7 @@ export default defineNitroConfig({
   runtimeConfig: {
     stripeSecretKey: '',
     botUsername: '',
+    welcomeVideoUrl: '',
   },
   publicAssets: [{ dir: 'public' }],
 });

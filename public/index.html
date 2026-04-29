@@ -133,6 +133,15 @@
           </p>
         </section>
 
+        <!-- Optional welcome video — rendered only if NITRO_WELCOME_VIDEO_URL is set -->
+        <section id="welcome-video-section" class="mt-6 hidden">
+          <div
+            id="welcome-video-container"
+            class="relative w-full overflow-hidden rounded-xl bg-slate-900 shadow-md"
+            style="aspect-ratio: 16 / 9"
+          ></div>
+        </section>
+
         <!-- Step 2: Don't have Telegram? -->
         <section
           class="mt-8 rounded-xl bg-sky-50 border border-sky-100 overflow-hidden"
@@ -329,6 +338,70 @@
     </main>
 
     <script>
+      function buildVideoEmbed(url) {
+        if (!url || typeof url !== "string") return null;
+        const trimmed = url.trim();
+        if (!trimmed) return null;
+
+        const yt = trimmed.match(
+          /(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/,
+        );
+        if (yt) {
+          return {
+            type: "iframe",
+            src: `https://www.youtube-nocookie.com/embed/${yt[1]}`,
+            allow:
+              "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share",
+          };
+        }
+
+        const vimeo = trimmed.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+        if (vimeo) {
+          return {
+            type: "iframe",
+            src: `https://player.vimeo.com/video/${vimeo[1]}`,
+            allow: "autoplay; fullscreen; picture-in-picture; clipboard-write",
+          };
+        }
+
+        if (/^https?:\/\//i.test(trimmed)) {
+          return { type: "video", src: trimmed };
+        }
+
+        return null;
+      }
+
+      function renderWelcomeVideo(url) {
+        const $section = document.getElementById("welcome-video-section");
+        const $container = document.getElementById("welcome-video-container");
+        if (!$section || !$container) return;
+
+        const embed = buildVideoEmbed(url);
+        if (!embed) return;
+
+        if (embed.type === "iframe") {
+          const iframe = document.createElement("iframe");
+          iframe.src = embed.src;
+          iframe.title = "Welcome video";
+          iframe.loading = "lazy";
+          iframe.allow = embed.allow;
+          iframe.allowFullscreen = true;
+          iframe.referrerPolicy = "strict-origin-when-cross-origin";
+          iframe.className = "absolute inset-0 w-full h-full border-0";
+          $container.appendChild(iframe);
+        } else {
+          const video = document.createElement("video");
+          video.src = embed.src;
+          video.controls = true;
+          video.playsInline = true;
+          video.preload = "metadata";
+          video.className = "absolute inset-0 w-full h-full";
+          $container.appendChild(video);
+        }
+
+        $section.classList.remove("hidden");
+      }
+
       (async () => {
         const params = new URLSearchParams(window.location.search);
         const sessionId = params.get("checkoutsesh");
@@ -373,6 +446,7 @@
           $url.value = data.activationUrl;
           $cmd.value = `/start ${data.activationCode}`;
           $bot.textContent = "@" + data.botUsername;
+          renderWelcomeVideo(data.welcomeVideoUrl);
           $loading.classList.add("hidden");
           $success.classList.remove("hidden");
         } catch (err) {

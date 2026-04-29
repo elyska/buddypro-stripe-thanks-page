@@ -5,6 +5,7 @@ export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
   const stripeSecretKey = config.stripeSecretKey as string;
   const botUsername = config.botUsername as string;
+  const welcomeVideoUrl = (config.welcomeVideoUrl as string) || '';
 
   if (!stripeSecretKey) {
     throw createError({
@@ -60,5 +61,6 @@ export default defineEventHandler(async (event) => {
     botUsername,
     mode: session.mode,
     source,
+    welcomeVideoUrl: welcomeVideoUrl || null,
   };
 });

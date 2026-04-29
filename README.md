@@ -40,6 +40,7 @@ Open http://localhost:3000/?checkoutsesh=cs_test_… with a real test session ID
 | -------------------------- | -------- | ------------------------------------------------------------------------------------------- |
 | `NITRO_STRIPE_SECRET_KEY`  | Yes      | Your Stripe secret key (`sk_live_…` or `sk_test_…`). Used server-side only — never exposed. |
 | `NITRO_BOT_USERNAME`       | Yes      | Your Telegram bot username, no leading `@`. Used to build the `t.me/{username}` link.       |
+| `NITRO_WELCOME_VIDEO_URL`  | No       | If set, an embedded video is rendered under the activation link. Supports YouTube (watch / `youtu.be` / shorts), Vimeo, and direct video file URLs (`.mp4`, `.webm`). Leave unset to hide the embed. |
 
 > Nitro maps `NITRO_*` env vars onto runtime config automatically. If you prefer the bare names (`STRIPE_SECRET_KEY`, `BOT_USERNAME`), you can also set those — Nitro picks them up via `runtimeConfig` defaults.
 
@@ -54,7 +55,8 @@ Open http://localhost:3000/?checkoutsesh=cs_test_… with a real test session ID
   "activationCode": "STRIPE_in_1Abc...",
   "botUsername": "YourBot",
   "mode": "subscription",
-  "source": "invoice"
+  "source": "invoice",
+  "welcomeVideoUrl": null
 }
 ```
 

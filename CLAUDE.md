@@ -53,7 +53,8 @@ The HTML page calls `GET /api/activation?checkoutsesh=…` and expects this JSON
   "activationCode": "STRIPE_…",
   "botUsername": "…",
   "mode": "subscription" | "payment",
-  "source": "invoice" | "payment_intent"
+  "source": "invoice" | "payment_intent",
+  "welcomeVideoUrl": "https://…" | null
 }
 ```
 
