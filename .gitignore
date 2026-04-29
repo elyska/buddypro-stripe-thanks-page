@@ -1,0 +1,8 @@
+node_modules/
+.nitro/
+.output/
+.vercel/
+.env
+.env.local
+*.log
+.DS_Store
