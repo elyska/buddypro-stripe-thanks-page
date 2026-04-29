@@ -4,13 +4,18 @@ A drop-in branded thank-you page that BuddyPro owners use as their Stripe Checko
 
 Built with [Nitro](https://nitro.build) so you can deploy it to Vercel, Cloudflare Workers, plain Node, Bun, or Netlify by changing a single config flag.
 
+![Thanks page UI](./images/ui.png)
+
 ## How it works
 
-1. In your Stripe payment link / Checkout Session, set the success URL to:
+1. In your Stripe payment link, edit it and on the **After payment** tab choose **Don't show confirmation page**, then enter your deployed thanks-page URL:
    ```
    https://thanks.buddypro.ai/?checkoutsesh={CHECKOUT_SESSION_ID}
    ```
    (Replace the domain with wherever you deploy this. The `{CHECKOUT_SESSION_ID}` placeholder is filled by Stripe automatically — see [Stripe docs on `success_url`](https://docs.stripe.com/api/checkout/sessions/create#create_checkout_session-success_url).)
+
+   ![Stripe payment link – After payment configuration](./images/edit-payment-link.png)
+
 2. After payment, the buyer lands on the thanks page.
 3. The page calls `GET /api/activation?checkoutsesh=cs_…`, which uses the Stripe Secret Key to retrieve the session and derive the BuddyPro activation code.
 4. The buyer clicks the **Open in Telegram** button and is dropped into your bot with the activation code prefilled.
