@@ -20,14 +20,6 @@
     <main
       class="w-full max-w-xl bg-white rounded-2xl shadow-xl p-6 sm:p-10 my-6 sm:my-10"
     >
-      <!-- Loading state -->
-      <div id="loading" class="text-center py-12">
-        <div
-          class="inline-block w-10 h-10 border-4 border-slate-200 border-t-slate-700 rounded-full animate-spin"
-        ></div>
-        <p class="mt-4 text-slate-500 text-sm">Confirming your purchase…</p>
-      </div>
-
       <!-- Success state -->
       <div id="success" class="hidden">
         <div class="text-center">
@@ -133,7 +125,7 @@
           </p>
         </section>
 
-        <!-- Optional welcome video — rendered only if NITRO_WELCOME_VIDEO_URL is set -->
+        <!-- Optional welcome video — rendered only if WELCOME_VIDEO_URL is set -->
         <section id="welcome-video-section" class="mt-6 hidden">
           <div
             id="welcome-video-container"
@@ -338,6 +330,15 @@
     </main>
 
     <script>
+      // ─── EDIT THESE TWO CONSTANTS ────────────────────────────────────────
+      // Your Telegram bot username (no leading @).
+      const BOT_USERNAME = "your_bot_username";
+      // Optional: a welcome video shown under the activation link.
+      // Supports YouTube (watch / youtu.be / shorts), Vimeo, and direct video
+      // file URLs (.mp4, .webm). Leave as "" to hide the embed.
+      const WELCOME_VIDEO_URL = "";
+      // ─────────────────────────────────────────────────────────────────────
+
       function buildVideoEmbed(url) {
         if (!url || typeof url !== "string") return null;
         const trimmed = url.trim();
@@ -402,22 +403,15 @@
         $section.classList.remove("hidden");
       }
 
-      (async () => {
+      (() => {
         const params = new URLSearchParams(window.location.search);
-        const sessionId = params.get("checkoutsesh");
+        const sessionId = params.get("session_id");
 
-        const $loading = document.getElementById("loading");
         const $success = document.getElementById("success");
         const $error = document.getElementById("error");
         const $errorMsg = document.getElementById("error-message");
-        const $btn = document.getElementById("activate-btn");
-        const $url = document.getElementById("activation-url");
-        const $cmd = document.getElementById("manual-command");
-        const $bot = document.getElementById("bot-handle");
 
         const showError = (msg) => {
-          $loading.classList.add("hidden");
-          $success.classList.add("hidden");
           $error.classList.remove("hidden");
           if (msg) $errorMsg.textContent = msg;
         };
@@ -429,33 +423,18 @@
           return;
         }
 
-        try {
-          const res = await fetch(
-            `/api/activation?checkoutsesh=${encodeURIComponent(sessionId)}`,
-          );
-          if (!res.ok) {
-            const body = await res.json().catch(() => ({}));
-            showError(
-              body.statusMessage ||
-                `We couldn't load your activation link (status ${res.status}).`,
-            );
-            return;
-          }
-          const data = await res.json();
-          $btn.href = data.activationUrl;
-          $url.value = data.activationUrl;
-          $cmd.value = `/start ${data.activationCode}`;
-          $bot.textContent = "@" + data.botUsername;
-          renderWelcomeVideo(data.welcomeVideoUrl);
-          $loading.classList.add("hidden");
-          $success.classList.remove("hidden");
-        } catch (err) {
-          showError(
-            "We couldn't reach the server. Check your connection and try again.",
-          );
-        }
+        const activationCode = `STRIPE_${sessionId}`;
+        const activationUrl = `https://t.me/${BOT_USERNAME}?start=${activationCode}`;
 
-        // Copy buttons
+        document.getElementById("activate-btn").href = activationUrl;
+        document.getElementById("activation-url").value = activationUrl;
+        document.getElementById("manual-command").value =
+          `/start ${activationCode}`;
+        document.getElementById("bot-handle").textContent = "@" + BOT_USERNAME;
+
+        renderWelcomeVideo(WELCOME_VIDEO_URL);
+        $success.classList.remove("hidden");
+
         document.querySelectorAll(".copy-btn").forEach((btn) => {
           btn.addEventListener("click", async () => {
             const target = document.getElementById(btn.dataset.copyTarget);
@@ -463,7 +442,6 @@
             try {
               await navigator.clipboard.writeText(target.value);
             } catch {
-              // Fallback for non-clipboard-API browsers
               target.select();
               document.execCommand("copy");
             }
