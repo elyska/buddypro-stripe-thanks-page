@@ -10,16 +10,62 @@ It's a single static HTML file — no server, no build step, no dependencies. Dr
 
 1. In your Stripe payment link, edit it and on the **After payment** tab choose **Don't show confirmation page**, then enter your deployed thanks-page URL:
    ```
-   https://thanks.buddypro.ai/?session_id={CHECKOUT_SESSION_ID}
+   https://buddypro.ai/thanks?session_id={CHECKOUT_SESSION_ID}
    ```
    (Replace the domain with wherever you deploy this. The `{CHECKOUT_SESSION_ID}` placeholder is filled by Stripe automatically — see [Stripe docs on `success_url`](https://docs.stripe.com/api/checkout/sessions/create#create_checkout_session-success_url).)
 
    ![Stripe payment link – After payment configuration](./images/edit-payment-link.png)
 
 2. After payment, the buyer lands on the thanks page.
-3. The page reads the `session_id` query param and POSTs it together with your connected Stripe account ID to a small BuddyPro-hosted Lambda. The Lambda uses BuddyPro's platform Stripe key to look up the session and returns a short activation code (`STRIPE_in_…` for invoiced/subscription purchases, `STRIPE_pi_…` for one-offs).
-4. The page builds the link `https://t.me/{BOT_USERNAME}?start={activation_code}`. The whole link stays under Telegram's 64-char `?start=` payload limit, so the `/start` parameter prefills correctly.
+3. The page reads the `session_id` query param and POSTs it together with your connected Stripe account ID to a small BuddyPro-hosted Lambda (see **Activation API** below). The Lambda uses BuddyPro's platform Stripe key to look up the session and returns a short activation code (`STRIPE_in_…` for invoiced/subscription purchases, `STRIPE_pi_…` for one-offs).
+4. The page builds the link `https://t.me/{BOT_USERNAME}?start={activation_code}`
 5. The buyer clicks the **Open in Telegram** button and is dropped into your bot with the activation code ready to send. BuddyPro recognizes the code and activates the purchase.
+
+## Activation API
+
+The page calls a single BuddyPro-hosted endpoint that resolves a Stripe checkout session ID into a short activation code. It exists because Telegram's `?start=` payload is capped at 64 chars, while Stripe checkout session IDs alone are ~66 chars — too long. Stripe invoice IDs (`in_…`) and payment intent IDs (`pi_…`) are ~25–27 chars, so the resulting `STRIPE_<id>` activation code fits comfortably under the limit.
+
+**Endpoint:** `POST https://fozkkoh6h7jmq7a4zyfb2mskm40mysnz.lambda-url.eu-north-1.on.aws/`
+**Auth:** none — the only inputs are the Stripe checkout session ID (which Stripe already exposes to the buyer's browser) and the public connected account ID.
+**CORS:** open to all origins.
+
+### Request
+
+```bash
+curl -X POST https://fozkkoh6h7jmq7a4zyfb2mskm40mysnz.lambda-url.eu-north-1.on.aws/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "session_id": "cs_live_a1b2c3...",
+    "accountId":  "acct_1SmGpbLHHwsRli8Q"
+  }'
+```
+
+| Field        | Type   | Description                                                                                       |
+| ------------ | ------ | ------------------------------------------------------------------------------------------------- |
+| `session_id` | string | The Stripe checkout session ID (the `cs_live_…` / `cs_test_…` value Stripe puts in `success_url`).|
+| `accountId`  | string | Your connected Stripe account ID (`acct_…`) — the account that owns the session.                  |
+
+### Response
+
+`200 OK`:
+```json
+{
+  "activationCode": "STRIPE_in_1Abc..."
+}
+```
+
+The returned `activationCode` is `STRIPE_in_…` for subscriptions and invoiced one-off charges, or `STRIPE_pi_…` for plain one-off charges.
+
+### Errors
+
+All errors return JSON of the form `{ "error": "<message>" }`:
+
+| Status | Meaning                                                                              |
+| ------ | ------------------------------------------------------------------------------------ |
+| 400    | `session_id` or `accountId` missing/invalid in the request body.                      |
+| 404    | Stripe doesn't recognize the session for this connected account.                      |
+| 422    | Session exists but no invoice or payment intent ID is available yet (try again).      |
+| 502    | Upstream Stripe error.                                                                |
 
 ## Setup
 
