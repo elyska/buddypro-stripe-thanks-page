@@ -17,22 +17,21 @@ It's a single static HTML file — no server, no build step, no dependencies. Dr
    ![Stripe payment link – After payment configuration](./images/edit-payment-link.png)
 
 2. After payment, the buyer lands on the thanks page.
-3. The page reads the `session_id` query param and builds the activation link client-side:
-   ```
-   https://t.me/{BOT_USERNAME}?start=STRIPE_{checkout_session_id}
-   ```
-4. The buyer clicks the **Open in Telegram** button and is dropped into your bot with the activation code prefilled. BuddyPro recognizes the session ID and activates the purchase.
+3. The page reads the `session_id` query param and POSTs it together with your connected Stripe account ID to a small BuddyPro-hosted Lambda. The Lambda uses BuddyPro's platform Stripe key to look up the session and returns a short activation code (`STRIPE_in_…` for invoiced/subscription purchases, `STRIPE_pi_…` for one-offs).
+4. The page builds the link `https://t.me/{BOT_USERNAME}?start={activation_code}`. The whole link stays under Telegram's 64-char `?start=` payload limit, so the `/start` parameter prefills correctly.
+5. The buyer clicks the **Open in Telegram** button and is dropped into your bot with the activation code ready to send. BuddyPro recognizes the code and activates the purchase.
 
 ## Setup
 
-Open `index.html` and edit the two constants near the top of the `<script>` block:
+Open `index.html` and edit the constants near the top of the `<script>` block:
 
 ```js
-const BOT_USERNAME = "your_bot_username";   // Your Telegram bot username, no leading @
-const WELCOME_VIDEO_URL = "";                // Optional: YouTube/Vimeo/.mp4 URL, or "" to hide
+const BOT_USERNAME = "your_bot_username";       // Your Telegram bot username, no leading @
+const STRIPE_ACCOUNT_ID = "acct_xxxxxxxxxxxx";  // Your connected Stripe account ID
+const WELCOME_VIDEO_URL = "";                    // Optional: YouTube/Vimeo/.mp4 URL, or "" to hide
 ```
 
-That's it. There's nothing else to configure.
+That's it. There's nothing else to configure. The activation API URL is hardcoded to BuddyPro's Lambda — every fork shares it.
 
 To preview locally:
 

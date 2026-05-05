@@ -2,12 +2,13 @@
 
 You're working on a small open-source web page that BuddyPro owners deploy as the **success URL for their Stripe Checkout**. After a buyer pays, Stripe redirects them here with the checkout session ID in the URL, and the page turns it into a one-click Telegram activation link for the owner's BuddyPro instance.
 
-It's intentionally tiny: **a single static HTML file**, no server, no build step, no dependencies. Anyone can fork, rebrand, translate, and host it on any static host (Vercel, Netlify, GitHub Pages, S3 — anywhere).
+It's intentionally tiny: **a single static HTML file** that calls one BuddyPro-hosted Lambda to resolve the Stripe checkout session ID into a short activation code (needed because Telegram's `?start=` payload is capped at 64 chars). No server to run, no build step, no dependencies on the page side. Anyone can fork, rebrand, translate, and host it on any static host (Vercel, Netlify, GitHub Pages, S3 — anywhere).
 
 ## Prerequisites
 
 - A Telegram bot username (no `@` prefix)
-- That's it. No Node.js, no npm, no Stripe API key, no env vars.
+- The connected Stripe account ID (`acct_…`) that's selling the bot access — this is what tells BuddyPro's Lambda which connected account to look the session up under
+- That's it. No Node.js, no npm, no Stripe API key on your side, no env vars.
 
 ## What's customizable (do whatever you want)
 
@@ -38,9 +39,13 @@ The `{CHECKOUT_SESSION_ID}` placeholder is filled by Stripe automatically — se
 
 ### 2. The activation code format
 
-The link format is always `https://t.me/{BOT_USERNAME}?start=STRIPE_{checkout_session_id}`. BuddyPro's Telegram bot recognizes the `STRIPE_cs_…` prefix and looks the session up server-side to activate the purchase. If you change the prefix or the structure, the bot won't recognize the activation.
+The link format is always `https://t.me/{BOT_USERNAME}?start=STRIPE_{id}`, where `{id}` is whatever BuddyPro's Lambda returns — typically a Stripe invoice ID (`in_…`) for subscriptions / invoiced one-offs or a payment intent ID (`pi_…`) for plain one-offs. BuddyPro's Telegram bot recognizes the `STRIPE_in_…` and `STRIPE_pi_…` formats and matches them to the buyer's purchase. If you change the prefix or skip the Lambda call, the bot won't recognize the activation.
 
-### 3. Element IDs the script depends on
+### 3. The activation API endpoint
+
+The page calls `POST https://fozkkoh6h7jmq7a4zyfb2mskm40mysnz.lambda-url.eu-north-1.on.aws/` with body `{ session_id, accountId }` and expects `{ activationCode }` back. This Lambda is BuddyPro infrastructure — every fork shares it. Don't replace the URL unless BuddyPro has told you to.
+
+### 4. Element IDs the script depends on
 
 The script in `index.html` looks up these IDs / classes — keep them if you keep the script:
 
@@ -57,14 +62,15 @@ If you rewrite the page from scratch, you can rewire all of this. The point is: 
 
 ## Configuration
 
-Edit two constants at the top of the `<script>` block in `index.html`:
+Edit the constants at the top of the `<script>` block in `index.html`:
 
 ```js
-const BOT_USERNAME = "your_bot_username";   // Your Telegram bot username, no leading @
-const WELCOME_VIDEO_URL = "";                // Optional: YouTube/Vimeo/.mp4 URL, or "" to hide
+const BOT_USERNAME = "your_bot_username";       // Your Telegram bot username, no leading @
+const STRIPE_ACCOUNT_ID = "acct_xxxxxxxxxxxx";  // Your connected Stripe account ID
+const WELCOME_VIDEO_URL = "";                    // Optional: YouTube/Vimeo/.mp4 URL, or "" to hide
 ```
 
-That's the entire configuration surface.
+That's the entire configuration surface. `ACTIVATION_API_URL` is hardcoded right below — leave it alone unless BuddyPro changes its Lambda.
 
 ## How to run locally
 
@@ -111,4 +117,4 @@ No env vars, no build step, no Node.js runtime required.
 
 BuddyPro owners sell Telegram bot access via Stripe. After payment, the buyer needs an activation link of the form `https://t.me/{bot}?start=STRIPE_{checkout_session_id}` to redeem their purchase inside Telegram. That link is also emailed, but emails sometimes land in spam — so this page acts as a reliable, brandable, copyable backup directly on the Stripe success URL.
 
-The page used to be a Nitro server that called the Stripe API to derive an invoice / payment-intent ID from the session. BuddyPro now accepts the checkout session ID directly, so the server is gone — the page just reads the `session_id` from the URL and builds the link client-side.
+The page used to be a Nitro server that called the Stripe API itself to derive an invoice / payment-intent ID from the session. The Stripe key has been moved to a small BuddyPro-hosted Lambda — the page now POSTs the session ID + connected account ID to that Lambda and gets a short activation code back. Owners no longer need their own Stripe key in the page, and the activation link stays under Telegram's 64-char `?start=` payload limit.
