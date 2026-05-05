@@ -43,7 +43,7 @@ The link format is always `https://t.me/{BOT_USERNAME}?start=STRIPE_{id}`, where
 
 ### 3. The activation API endpoint
 
-The page calls `POST https://fozkkoh6h7jmq7a4zyfb2mskm40mysnz.lambda-url.eu-north-1.on.aws/` with body `{ session_id, accountId }` and expects `{ activationCode }` back. This Lambda is BuddyPro infrastructure — every fork shares it. Don't replace the URL unless BuddyPro has told you to.
+The page calls `POST https://dhnjsn2szoce3hxgen7rnf4usu0epjee.lambda-url.eu-central-1.on.aws/` with body `{ session_id, accountId }` and expects `{ activationCode }` back. This Lambda is BuddyPro infrastructure — every fork shares it. Don't replace the URL unless BuddyPro has told you to.
 
 ### 4. Element IDs the script depends on
 

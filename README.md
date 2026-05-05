@@ -25,14 +25,14 @@ It's a single static HTML file — no server, no build step, no dependencies. Dr
 
 The page calls a single BuddyPro-hosted endpoint that resolves a Stripe checkout session ID into a short activation code. It exists because Telegram's `?start=` payload is capped at 64 chars, while Stripe checkout session IDs alone are ~66 chars — too long. Stripe invoice IDs (`in_…`) and payment intent IDs (`pi_…`) are ~25–27 chars, so the resulting `STRIPE_<id>` activation code fits comfortably under the limit.
 
-**Endpoint:** `POST https://fozkkoh6h7jmq7a4zyfb2mskm40mysnz.lambda-url.eu-north-1.on.aws/`
+**Endpoint:** `POST https://dhnjsn2szoce3hxgen7rnf4usu0epjee.lambda-url.eu-central-1.on.aws/`
 **Auth:** none — the only inputs are the Stripe checkout session ID (which Stripe already exposes to the buyer's browser) and the public connected account ID.
 **CORS:** open to all origins.
 
 ### Request
 
 ```bash
-curl -X POST https://fozkkoh6h7jmq7a4zyfb2mskm40mysnz.lambda-url.eu-north-1.on.aws/ \
+curl -X POST https://dhnjsn2szoce3hxgen7rnf4usu0epjee.lambda-url.eu-central-1.on.aws/ \
   -H "Content-Type: application/json" \
   -d '{
     "session_id": "cs_live_a1b2c3...",
