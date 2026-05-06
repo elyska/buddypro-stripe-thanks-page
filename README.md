@@ -107,11 +107,16 @@ No env vars, no build step, no Node.js runtime needed.
 
 Edit `index.html` directly — it's intentionally a single self-contained file. Tailwind is loaded via CDN, so all the classes work out of the box. Replace the heading, swap the icon, drop in your own logo, change colors, translate the copy.
 
-The only things the inline script needs to keep working are the element IDs:
-- `#success`, `#error`, `#error-message` — top-level state containers
-- `#activate-btn`, `#activation-url`, `#manual-command`, `#bot-handle`
-- `#welcome-video-section`, `#welcome-video-container`
-- `.copy-btn` with `data-copy-target="<id>"`
+The only things the inline script needs to keep working are the element IDs / data attributes:
+- `#loading`, `#success`, `#error`, `#error-message` — top-level state containers
+- `#activation-url` — input the script writes the resolved `t.me/...` URL into
+- `#step1-desktop`, `#step1-mobile` — install variants toggled by device
+- `#step2-desktop`, `#step2-mobile` — activation variants toggled by device
+- `#qr-appstore`, `#qr-playstore`, `#qr-activation` — empty `<div>` slots that get filled with generated QR SVGs (desktop only)
+- `[data-activate-btn]` — any element with this attribute gets its `href` set to the activation URL
+- `.copy-btn` with `data-copy-target="<id>"` — copy buttons
+
+The page also loads [`qrcode-generator`](https://github.com/kazuhikoarase/qrcode-generator) via jsDelivr CDN to render the QR codes purely client-side.
 
 ## Open source
 
