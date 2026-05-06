@@ -41,13 +41,6 @@
           <h1 class="text-3xl font-semibold text-slate-900">
             Thanks for your purchase!
           </h1>
-          <p class="mt-3 text-slate-600">
-            We've also emailed your activation link to you.
-            <strong class="text-slate-800"
-              >If it doesn't arrive within a few minutes, check your spam
-              folder</strong
-            >.
-          </p>
         </div>
 
         <!-- Step 1: Install Telegram -->
@@ -68,8 +61,7 @@
           <!-- Desktop variant: QR codes -->
           <div id="step1-desktop" class="hidden">
             <p class="mt-4 text-sm text-slate-600">
-              Telegram is a free messaging app. Scan one of these QR codes with
-              your phone to install it.
+              Scan one of these QR codes with your phone to install it.
             </p>
             <div class="mt-4 grid grid-cols-2 gap-3 sm:gap-4">
               <div
@@ -89,6 +81,12 @@
                 </div>
               </div>
             </div>
+            <p
+              class="mt-4 p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 text-xs"
+            >
+              <strong>Set up Telegram on your phone first.</strong> You won't
+              be able to log in on a computer without the mobile app.
+            </p>
           </div>
 
           <!-- Mobile variant: install buttons -->
@@ -190,6 +188,15 @@
             </a>
           </div>
         </section>
+
+        <!-- Email-delivered link reminder, before the save fallback -->
+        <p class="mt-6 text-center text-sm text-slate-600">
+          We've also emailed your activation link to you.
+          <strong class="text-slate-800"
+            >If it doesn't arrive within a few minutes, check your spam
+            folder</strong
+          > or just copy the link below.
+        </p>
 
         <!-- Save your activation link — fallback below the steps -->
         <section
